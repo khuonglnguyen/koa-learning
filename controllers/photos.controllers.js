@@ -1,5 +1,6 @@
 const { getRequest } = require("../services/request.services");
 const redis = require("redis");
+const fs = require("fs");
 
 // create and connect redis client to local instance.
 const client = redis.createClient(6379);
@@ -37,6 +38,30 @@ const getPhotos = async (ctx) => {
     ctx.status = 500;
   }
 };
+
+const postPhotos = async (ctx) => {
+  try {
+    const file = ctx.request.files.file;
+
+    fs.readFile(file.filepath, function (err, data) {
+      if (err) {
+        console.log("Error!\n");
+      } else {
+        fs.writeFile(`./upload/${file.originalFilename}`, data, (err) => {
+          if (err) console.log(err);
+          else {
+            console.log("File written successfully\n");
+          }
+        });
+      }
+    });
+  } catch (err) {
+    ctx.body = err;
+    ctx.status = 500;
+  }
+};
+
 module.exports = {
   getPhotos,
+  postPhotos,
 };
