@@ -61,7 +61,19 @@ const postPhotos = async (ctx) => {
   }
 };
 
+const downloadPhotos = async (ctx) => {
+  try {
+    const file = fs.readFileSync("./upload/anime.jpg");
+    ctx.body = { fileName: "anime.jpg", fileData: file };
+    ctx.status = 200;
+  } catch (err) {
+    ctx.body = err;
+    ctx.status = 500;
+  }
+};
+
 module.exports = {
   getPhotos,
   postPhotos,
+  downloadPhotos,
 };
